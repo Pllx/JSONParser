@@ -35,14 +35,57 @@ function JSONConverter(string) {
 }
 
 function arrayParser(string) {
-  var EOA = string.lastIndexOf(']');
+  //var EOA = string.lastIndexOf(']');
+  var opener = 0;
+  var closer = 0;
+  var element = "";
+  var elem = "";
+  var elements = [];
+
+  //removes array braces
+  string = string.slice(1,string.length-1);
+
+  for (var i = 0; i < string.length; i++) {
+    if (string[i] !== '[' && string[i] !== ']') {
+      // if (string[i] === ',' || i === string.length-1) {
+      //   elements.push(element);
+      //   element = "";
+      // }
+      // else {
+      //   element += string[i];
+      //   //console.log(element);
+      // }
+      if (string[i] !== ',') {
+        elem += string[i];
+      }
+      if (i === string.length-1 || string[i] === ',') {
+        elements.push(elem);
+        elem = "";
+      }
+    }
+
+    if (string[i] === '[') {
+      elements.push(string[i]);
+      opener++;
+    }
+    if (string[i] === ']') {
+      element += (string[i]);
+      if (--opener === 0) {
+        console.log('pushing',element);
+        elements.push(element);
+        element = "";
+      }
+    }
+
+  }
+
   // var elements = string.slice(1,EOA).split(',');
-  // var convertedArray = [];
-  //
-  // for (var i = 0; i < elements.length; i++) {
-  //   convertedArray.push(JSONConverter(elements[i]));
-  // }
-  // return convertedArray;
+  var convertedArray = [];
+
+  for (var i = 0; i < elements.length; i++) {
+    convertedArray.push(JSONConverter(elements[i]));
+  }
+  return convertedArray;
 }
 
 function stringParser(string) {
